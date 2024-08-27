@@ -3,5 +3,9 @@ function AddNumber(x,y) {
     return result
     
 }
-
-module.exports = AddNumber
+function minus(x,y) {
+    let result = x - y
+    return result
+    
+}
+module.exports = {AddNumber,minus}
