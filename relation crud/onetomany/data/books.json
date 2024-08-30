@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "booksName": "nodejs",
+    "authorId": 1
+  },
+  {
+    "id": 2,
+    "booksName": "js",
+    "authorId": 1
+  },
+  {
+    "id": 3,
+    "booksName": "js",
+    "authorId": 2
+  },
+  {
+    "id": 4,
+    "booksName": "java",
+    "authorId": 2
+  }
+]

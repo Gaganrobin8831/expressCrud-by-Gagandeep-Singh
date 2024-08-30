@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "gagan",
+    "classId": [
+      1
+    ]
+  },
+  {
+    "id": 2,
+    "name": "robin",
+    "classId": [
+      1,
+      2,
+      3
+    ]
+  }
+]
