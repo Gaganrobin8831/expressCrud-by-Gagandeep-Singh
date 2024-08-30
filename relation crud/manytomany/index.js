@@ -162,74 +162,101 @@ const server = http.createServer((req, res) => {
             }
         });
     } else if (req.method === 'DELETE' && req.url.startsWith('/delete-student')) {
-        const id = parseInt(req.url.split('/').pop(), 10);
-        if (isNaN(id)) {
+        const studentID = parseInt(req.url.split('/').pop());
+        if (isNaN(studentID)) {
             res.statusCode = 400;
-            res.end('Invalid ID');
+            res.end('Invalid student ID');
             return;
         }
-        updateJSONData(STUDENTS_FILE_PATH, students => {
-            const index = students.findIndex(student => student.id === id);
-            if (index === -1) {
+        
+        readFile(STUDENTS_FILE_PATH, (err, students) => {
+            if (err) {
+                handleFileError(res, err);
+                return;
+            }
+            const newStudents = students.filter(student => student.id !== studentID);
+            if (newStudents.length === students.length) {
                 res.statusCode = 404;
                 res.end('Student not found');
                 return;
             }
-            students.splice(index, 1);
-        }, res, () => {
-            readFile(COURSES_FILE_PATH, (err, courses) => {
+           
+            writeJSONToFile(STUDENTS_FILE_PATH, newStudents, (err) => {
                 if (err) {
                     handleFileError(res, err);
                     return;
                 }
-                courses.forEach(course => {
-                    course.studentid = course.studentid.filter(studentId => studentId !== id);
-                });
-                writeJSONToFile(COURSES_FILE_PATH, courses, (err) => {
+               
+                
+                readFile(COURSES_FILE_PATH, (err, courses) => {
                     if (err) {
                         handleFileError(res, err);
-                    } else {
-                        res.statusCode = 200;
-                        res.end('Student deleted and courses updated');
+                        return;
                     }
+                    const updatedCourses = courses.map(course => {
+                        course.studentIds = course.studentIds.filter(id => id !== studentID);
+                        return course;
+                    });
+                    
+                    
+                    writeJSONToFile(COURSES_FILE_PATH, updatedCourses, (err) => {
+                        if (err) {
+                            handleFileError(res, err);
+                            return;
+                        }
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end('Student and associated course links deleted successfully');
+                    });
                 });
             });
         });
     } else if (req.method === 'DELETE' && req.url.startsWith('/delete-course')) {
-        const id = parseInt(req.url.split('/').pop(), 10);
-        if (isNaN(id)) {
+        const courseID = parseInt(req.url.split('/').pop());
+        if (isNaN(courseID)) {
             res.statusCode = 400;
-            res.end('Invalid ID');
+            res.end('Invalid course ID');
             return;
         }
-        readFile(COURSES_FILE_PATH, courses => {
-            console.log(courses);
-            
-        //     const index = courses.filter(course => course.id === id);
-        //     if (index === -1) {
-        //         res.statusCode = 404;
-        //         res.end('Course not found');
-        //         return;
-        //     }
-        //     courses.splice(index, 1);
-        // }, res, () => {
-        //     readFile(STUDENTS_FILE_PATH, (err, students) => {
-        //         if (err) {
-        //             handleFileError(res, err);
-        //             return;
-        //         }
-        //         students.forEach(student => {
-        //             student.classId = student.classId.filter(courseId => courseId !== id);
-        //         });
-        //         writeJSONToFile(STUDENTS_FILE_PATH, students, (err) => {
-        //             if (err) {
-        //                 handleFileError(res, err);
-        //             } else {
-        //                 res.statusCode = 200;
-        //                 res.end('Course deleted and students updated');
-        //             }
-        //         });
-        //     });
+       readFile(COURSES_FILE_PATH, (err, courses) => {
+            if (err) {
+                handleFileError(res, err);
+                return;
+            }
+            const newCourses = courses.filter(course => course.id !== courseID);
+            if (newCourses.length === courses.length) {
+                res.statusCode = 404;
+                res.end('Course not found');
+                return;
+            }
+           
+            writeJSONToFile(COURSES_FILE_PATH, newCourses, (err) => {
+                if (err) {
+                    handleFileError(res, err);
+                    return;
+                }
+              
+                readFile(STUDENTS_FILE_PATH, (err, students) => {
+                    if (err) {
+                        handleFileError(res, err);
+                        return;
+                    }
+                    const updatedStudents = students.map(student => {
+                        student.classId = student.classId.filter(id => id !== courseID);
+                        return student;
+                    });
+                    
+                    writeJSONToFile(STUDENTS_FILE_PATH, updatedStudents, (err) => {
+                        if (err) {
+                            handleFileError(res, err);
+                            return;
+                        }
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end('Course and associated student links deleted successfully');
+                    });
+                });
+            });
         });
     } else {
         res.statusCode = 404;
