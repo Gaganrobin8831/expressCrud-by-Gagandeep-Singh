@@ -51,8 +51,8 @@ const server = http.createServer((req, res) => {
                                         handleFileError(res, err);
                                         return;
                                     }
-                                    res.statusCode = 200;
-                                    res.setHeader('Content-Type', 'application/json');
+                                   
+                                    // res.setHeader('Content-Type', 'application/json');
                                     res.end('Book added to existing author');
                                 });
                             });
@@ -61,11 +61,16 @@ const server = http.createServer((req, res) => {
                        
                         updateJSONData(AUTHORS_FILE_PATH, (authors) => {
                             const newAuthorId = authors.length ? authors[authors.length - 1].id + 1 : 1;
+
                             const newAuthor = { id: newAuthorId, authorName, booksId: [] };
+                            console.log(newAuthor);
+                            
                             authors.push(newAuthor);
                             updateJSONData(BOOKS_FILE_PATH, (books) => {
                                 const newBookId = books.length ? books[books.length - 1].id + 1 : 1;
                                 const newBook = { id: newBookId, booksName, authorId: newAuthorId };
+                                console.log(newBook);
+                                
                                 books.push(newBook);
                                 newAuthor.booksId.push(newBookId);
                                
@@ -80,11 +85,11 @@ const server = http.createServer((req, res) => {
                                             return;
                                         }
                                         res.statusCode = 200;
-                                        res.setHeader('Content-Type', 'application/json');
+                                        // res.setHeader('Content-Type', 'application/json');
                                         res.end('Author and book created successfully');
                                     });
                                 });
-                            }, res);
+                            });
                         }, res);
                     }
                 });
@@ -214,7 +219,7 @@ const server = http.createServer((req, res) => {
                     res.statusCode = 200;
                     res.end('Author and associated books deleted');
                 });
-            }, res);
+            });
         }, res);
     } else if (req.method === 'DELETE' && req.url.startsWith('/delete-book/')) {
       
@@ -244,7 +249,27 @@ const server = http.createServer((req, res) => {
                     res.statusCode = 200;
                     res.end('Book deleted successfully');
                 });
-            }, res);
+            });
+
+
+            updateJSONData(BOOKS_FILE_PATH, (books) => {
+                
+                
+                books.forEach(book => {
+                    book.id = book.id.findIndex(id => id !== id);
+                });
+                fs.writeFile(BOOKS_FILE_PATH, JSON.stringify(books, null, 2), 'utf8', (err) => {
+                    if (err) {
+                        handleFileError(res, err);
+                        return;
+                    }
+                    res.statusCode = 200;
+                    res.end('Book deleted successfully');
+                });
+            });
+
+
+
         }, res);
     } else {
         res.statusCode = 404;
