@@ -194,88 +194,107 @@ const server = http.createServer((req, res) => {
             }
         });
     } else if (req.method === 'DELETE' && req.url.startsWith('/delete-author/')) {
-       
         const authorId = parseInt(req.url.split('/').pop());
         if (isNaN(authorId)) {
             res.statusCode = 400;
             res.end('Invalid author ID');
             return;
         }
+
+        // Read and update authors.json
         updateJSONData(AUTHORS_FILE_PATH, (authors) => {
-            const newAuthors = authors.filter(author => author.id !== authorId);
-            if (newAuthors.length === authors.length) {
+            const authorIndex = authors.findIndex(author => author.id === authorId);
+            if (authorIndex === -1) {
                 res.statusCode = 404;
                 res.end('Author not found');
                 return;
             }
-           
-            updateJSONData(BOOKS_FILE_PATH, (books) => {
-                const newBooks = books.filter(book => book.authorId !== authorId);
-                fs.writeFile(BOOKS_FILE_PATH, JSON.stringify(newBooks, null, 2), 'utf8', (err) => {
-                    if (err) {
-                        handleFileError(res, err);
-                        return;
-                    }
-                    res.statusCode = 200;
-                    res.end('Author and associated books deleted');
-                });
+
+            // Get the list of books associated with the author to be deleted
+            const booksToDelete = authors[authorIndex].booksId;
+
+            // Remove the author
+            authors.splice(authorIndex, 1);
+
+            // Write the updated authors data back to file
+            fs.writeFile(AUTHORS_FILE_PATH, JSON.stringify(authors, null, 2), 'utf8', (err) => {
+                if (err) {
+                    handleFileError(res, err);
+                    return;
+                }
+
+                // Now update books.json to remove all books associated with the deleted author
+                updateJSONData(BOOKS_FILE_PATH, (books) => {
+                    const updatedBooks = books.filter(book => !booksToDelete.includes(book.id));
+
+                    // Write the updated books data back to file
+                    fs.writeFile(BOOKS_FILE_PATH, JSON.stringify(updatedBooks, null, 2), 'utf8', (err) => {
+                        if (err) {
+                            handleFileError(res, err);
+                            return;
+                        }
+
+                        res.statusCode = 200;
+                        res.end('Author and associated books deleted successfully');
+                    });
+                }, res);
             });
         }, res);
+
+    // DELETE Book
     } else if (req.method === 'DELETE' && req.url.startsWith('/delete-book/')) {
-      
         const bookId = parseInt(req.url.split('/').pop());
         if (isNaN(bookId)) {
             res.statusCode = 400;
             res.end('Invalid book ID');
             return;
         }
+
+        // Read and update books.json
         updateJSONData(BOOKS_FILE_PATH, (books) => {
-            const newBooks = books.filter(book => book.id !== bookId);
-            if (newBooks.length === books.length) {
+            const bookIndex = books.findIndex(book => book.id === bookId);
+            if (bookIndex === -1) {
                 res.statusCode = 404;
                 res.end('Book not found');
                 return;
             }
-           
-            updateJSONData(AUTHORS_FILE_PATH, (authors) => {
-                authors.forEach(author => {
-                    author.booksId = author.booksId.filter(id => id !== bookId);
-                });
-                fs.writeFile(AUTHORS_FILE_PATH, JSON.stringify(authors, null, 2), 'utf8', (err) => {
-                    if (err) {
-                        handleFileError(res, err);
-                        return;
-                    }
-                    res.statusCode = 200;
-                    res.end('Book deleted successfully');
-                });
+
+            // Remove the book
+            books.splice(bookIndex, 1);
+
+            // Write the updated books data back to file
+            fs.writeFile(BOOKS_FILE_PATH, JSON.stringify(books, null, 2), 'utf8', (err) => {
+                if (err) {
+                    handleFileError(res, err);
+                    return;
+                }
+
+                // Update authors.json to remove the reference to this book
+                updateJSONData(AUTHORS_FILE_PATH, (authors) => {
+                    authors.forEach(author => {
+                        author.booksId = author.booksId.filter(id => id !== bookId);
+                    });
+
+                    // Write the updated authors data back to file
+                    fs.writeFile(AUTHORS_FILE_PATH, JSON.stringify(authors, null, 2), 'utf8', (err) => {
+                        if (err) {
+                            handleFileError(res, err);
+                            return;
+                        }
+
+                        res.statusCode = 200;
+                        res.end('Book deleted successfully');
+                    });
+                }, res);
             });
-
-
-            updateJSONData(BOOKS_FILE_PATH, (books) => {
-                
-                
-                books.forEach(book => {
-                    book.id = book.id.findIndex(id => id !== id);
-                });
-                fs.writeFile(BOOKS_FILE_PATH, JSON.stringify(books, null, 2), 'utf8', (err) => {
-                    if (err) {
-                        handleFileError(res, err);
-                        return;
-                    }
-                    res.statusCode = 200;
-                    res.end('Book deleted successfully');
-                });
-            });
-
-
-
         }, res);
+
     } else {
         res.statusCode = 404;
         res.end('Not Found');
     }
 });
+
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

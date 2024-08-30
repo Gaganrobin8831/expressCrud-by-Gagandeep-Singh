@@ -17,9 +17,10 @@ function writeJSONToFile(filePath, data, callback) {
         if (err) {
             console.error(`Error writing to file ${filePath}:`, err);
             callback(err); 
-        } else {
-            callback(null); 
         }
+        //  else {
+        //     callback(null); 
+        // }
     });
 }
 
@@ -55,11 +56,12 @@ function updateJSONData(filePath, updateCallback, res, callback) {
             }
             if (callback) {
                 callback();
-            } else {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.end('File updated successfully');
             }
+            //  else {
+            //     res.statusCode = 200;
+            //     res.setHeader('Content-Type', 'application/json');
+            //     res.end('File updated successfully');
+            // }
         });
     });
 }
