@@ -57,4 +57,16 @@ function updateJSONData(filePath, updateCallback, res) {
     });
 }
 
-module.exports = {handleFileError,writeJSONToFile,updateJSONData}
+
+function readFile(filetPath,readCallBack){
+    fs.readFile(filetPath, 'utf8', (err, data) => {
+        if (err) {
+            handleFileError(res, err);
+            return;
+        }
+        let jsonArray = [];
+        jsonArray = JSON.parse(data);
+       readCallBack(jsonArray)
+    });
+    }
+module.exports = {handleFileError,writeJSONToFile,updateJSONData,readFile}

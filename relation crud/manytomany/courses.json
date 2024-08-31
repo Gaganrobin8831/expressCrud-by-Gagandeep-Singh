@@ -3,22 +3,7 @@
     "id": 1,
     "coursename": "BCA",
     "studentIds": [
-      1,
-      2
-    ]
-  },
-  {
-    "id": 2,
-    "coursename": "BCAA",
-    "studentIds": [
-      2
-    ]
-  },
-  {
-    "id": 3,
-    "coursename": "BCAAA",
-    "studentIds": [
-      2
+      1
     ]
   }
 ]

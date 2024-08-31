@@ -2,6 +2,11 @@
   {
     "id": 1,
     "bio": "I am from amritsar",
+    "userId": 1
+  },
+  {
+    "id": 2,
+    "bio": "I am from amritsar",
     "userId": 2
   }
 ]

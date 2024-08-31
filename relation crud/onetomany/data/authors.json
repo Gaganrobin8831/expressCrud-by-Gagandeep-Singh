@@ -1,17 +1,16 @@
 [
   {
     "id": 1,
-    "authorName": "gagan22",
+    "authorName": "xyz",
     "booksId": [
       1
     ]
   },
   {
     "id": 2,
-    "authorName": "robin",
+    "authorName": "abc",
     "booksId": [
-      3,
-      4
+      2
     ]
   }
 ]

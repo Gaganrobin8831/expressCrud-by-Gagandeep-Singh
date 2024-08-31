@@ -2,7 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const {handleFileError,writeJSONToFile,updateJSONData} = require('./userHandler/handleFunc')
+const {handleFileError,writeJSONToFile,updateJSONData ,readFile} = require('./userHandler/handleFunc');
+const { notDeepEqual } = require('assert');
 
 const PORT = 8000;
 const USERS_FILE = path.join(__dirname,  'users.json');
@@ -12,7 +13,11 @@ const PROFILES_FILE = path.join(__dirname,  'profiles.json');
 
 
 function getNextId(jsonArray) {
-    return jsonArray.length ? Math.max(jsonArray.map(item => item.id)) + 1 : 1;
+    let newid =  jsonArray.length ? jsonArray[jsonArray.length - 1].id + 1 : 1;
+   console.log(+newid);
+   
+    
+    return +newid
 }
 
 const server = http.createServer((req, res) => {
@@ -59,6 +64,48 @@ const server = http.createServer((req, res) => {
             }
         });
 
+    }
+    if (req.method === 'GET' && req.url === '/read') {
+        fs.readFile(USERS_FILE, 'utf8', (err, data) => {
+            if (err) {
+                handleFileError(res, err);
+                return;
+            }
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            
+
+            let newdata = JSON.parse(data)
+          
+            function loadData(data) {
+                console.log(data);
+               res.end(JSON.stringify(data))
+            }
+
+            readFile(PROFILES_FILE, (jsonArray) => {
+                    console.log(jsonArray,"1");
+                    console.log("reachrg here");
+                    
+                const classMap = new Map(jsonArray.map(cls => [cls.userId, cls]));
+                console.log({classMap});
+                console.log({newdata});
+                
+                const updatedData = newdata.map(user => {
+                    const classDetails = classMap.get(user.profileId);
+                    console.log({classDetails});
+                    
+
+                    return {
+                        ...user,
+                        Profiles: classDetails ? classDetails : user.userId
+                    };
+                });
+
+                loadData(updatedData)
+
+            })
+
+        });
     }else if (req.method === 'PUT' && req.url.startsWith('/users/')) {
        
         let body = '';

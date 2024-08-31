@@ -2,17 +2,18 @@
   {
     "id": 1,
     "name": "gagan",
-    "classId": [
+    "courseID": [
       1
     ]
   },
- {
+  {
     "id": 2,
-    "name": "robin",
-    "classId": [
-      1,
-      2,
-      3
-    ]
+    "name": "gagan2",
+    "courseID": []
+  },
+  {
+    "id": 3,
+    "name": "abc",
+    "courseID": []
   }
 ]

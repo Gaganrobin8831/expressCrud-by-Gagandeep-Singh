@@ -17,10 +17,7 @@ function writeJSONToFile(filePath, data, callback) {
         if (err) {
             console.error(`Error writing to file ${filePath}:`, err);
             callback(err); 
-        }
-        //  else {
-        //     callback(null); 
-        // }
+        } 
     });
 }
 
@@ -49,20 +46,16 @@ function updateJSONData(filePath, updateCallback, res, callback) {
 
         updateCallback(jsonArray);
 
-        writeJSONToFile(filePath, jsonArray, (err) => {
-            if (err) {
-                handleFileError(res, err);
-                return;
-            }
-            if (callback) {
-                callback();
-            }
-            //  else {
-            //     res.statusCode = 200;
-            //     res.setHeader('Content-Type', 'application/json');
-            //     res.end('File updated successfully');
-            // }
-        });
+        // writeJSONToFile(filePath, jsonArray, (err) => {
+        //     if (err) {
+        //         handleFileError(res, err);
+        //         return;
+        //     }
+        //     if (callback) {
+        //         callback();
+        //     } 
+        
+        // });
     });
 }
 

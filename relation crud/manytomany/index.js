@@ -5,6 +5,8 @@ const { handleFileError, writeJSONToFile, updateJSONData, readFile } = require('
 const PORT = 8000;
 const STUDENTS_FILE_PATH = path.join(__dirname, 'student.json');
 const COURSES_FILE_PATH = path.join(__dirname,  'courses.json');
+
+
 const server = http.createServer((req, res) => {
     console.log(`Received request: ${req.method} ${req.url}`);
 
@@ -46,6 +48,8 @@ const server = http.createServer((req, res) => {
    
     }else if (req.method === 'POST' && req.url === '/create-student') {
         let body = '';
+        console.log("ksjdbjksdbjksbdjkb");
+        
         req.on('data', chunk => {
             body += chunk.toString();
         });
@@ -58,6 +62,8 @@ const server = http.createServer((req, res) => {
                     res.end('Missing name or course');
                     return;
                 }
+                console.log("entet here");
+                
                 readFile(STUDENTS_FILE_PATH, (err, students) => {
                     if (err) return handleFileError(res, err);
                     readFile(COURSES_FILE_PATH, (err, courses) => {
@@ -77,11 +83,11 @@ const server = http.createServer((req, res) => {
                         let student = students.find(s => s.name === name);
                         if (!student) {
                             const newStudentId = students.length ? students[students.length - 1].id + 1 : 1;
-                            student = { id: newStudentId, name, classId: [courseObj.id] };
+                            student = { id: newStudentId, name, courseID: [courseObj.id] };
                             students.push(student);
                         } else {
-                            if (!student.classId.includes(courseObj.id)) {
-                                student.classId.push(courseObj.id);
+                            if (!student.courseID.includes(courseObj.id)) {
+                                student.courseID.push(courseObj.id);
                             }
                         }
                       
@@ -242,7 +248,7 @@ const server = http.createServer((req, res) => {
                         return;
                     }
                     const updatedStudents = students.map(student => {
-                        student.classId = student.classId.filter(id => id !== courseID);
+                        student.courseID = student.courseID.filter(id => id !== courseID);
                         return student;
                     });
                     
