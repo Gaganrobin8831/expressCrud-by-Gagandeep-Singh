@@ -1,5 +1,5 @@
 {
-  "name": "onetomany",
+  "name": "manytomany",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

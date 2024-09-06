@@ -28,14 +28,16 @@ function updateJSONData(filePath, updateCallback, res) {
     fs.readFile(filePath, 'utf8', (err, existingData) => {
         let jsonArray = [];
 
+        // If error and it's not a missing file, handle the error
         if (err && err.code !== 'ENOENT') {
             handleFileError(res, err);
             return;
         }
 
-        if (existingData.trim() !== '') {
+        // If existingData is undefined or empty, treat it as an empty array
+        if (existingData && existingData.trim() !== '') {
             try {
-                jsonArray = JSON.parse(existingData);  
+                jsonArray = JSON.parse(existingData);
                 if (!Array.isArray(jsonArray)) {
                     throw new Error('File content is not an array');
                 }
@@ -47,9 +49,10 @@ function updateJSONData(filePath, updateCallback, res) {
             }
         }
 
-        updateCallback(jsonArray); 
+        updateCallback(jsonArray);
 
-        writeJSONToFile(filePath, jsonArray, res); 
+        // Write back the updated data
+        writeJSONToFile(filePath, jsonArray, res);
     });
 }
 
@@ -62,12 +65,12 @@ function readFile(filePath, callback, res) {
 
         let jsonArray = [];
         try {
-            if (data.trim() === '') {
-
+            if (!data || data.trim() === '') {
+                
                 jsonArray = [];
-
             } else {
-                jsonArray = JSON.parse(data);  
+                // jsonArray = JSON.parse(data);
+                jsonArray = JSON.parse(data);
             }
         } catch (e) {
             console.error('Error parsing JSON:', e.message);
@@ -77,13 +80,14 @@ function readFile(filePath, callback, res) {
             }
             return;
         }
-        callback(jsonArray);  
+        callback(jsonArray);
     });
 }
 
-function writeFile(filePath, data) {
+function writeFile(filePath, data,res) {
     try {
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        // res.end("Data Write succecfully")
     } catch (err) {
         console.error(`Error writing file ${filePath}:`, err);
     }
@@ -91,4 +95,4 @@ function writeFile(filePath, data) {
 
 
 
-module.exports = { handleFileError, writeJSONToFile, updateJSONData, readFile ,writeFile};
+module.exports = { handleFileError, writeJSONToFile, updateJSONData, readFile, writeFile };
