@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .quiz-section {
+            margin-bottom: 20px;
+        }
+        .question {
+            font-weight: bold;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Data</h1>
+
+    <div id="quiz-container">
+        <% for (const [subject, quizzes] of Object.entries(quizData.quiz)) { %>
+
+            <div class="quiz-section">
+
+                <h2><%= subject.charAt(0).toUpperCase() + subject.slice(1) %></h2>
+
+                <% for (const [key, quiz] of Object.entries(quizzes)) { %>
+
+                    <div class="question"><%= quiz.question %></div>
+
+                    <ul class="options">
+                        
+                        <% quiz.options.forEach(option => { %>
+
+                            <li><%= option %></li>
+
+                        <% }); %>
+
+                    </ul>
+
+                <% } %>
+
+            </div>
+
+        <% } %>
+    </div>
+</body>
+</html>
