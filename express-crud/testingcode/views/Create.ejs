@@ -5,11 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post data</title>
 </head>
+<style>
+    body{
+        background-color: #212121;
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        justify-content: space-evenly;
+    }
+    form{
+        margin-top: 5vw;
+       border-radius: 10px ;
+       box-shadow: 10px 10px 10px 10px gray;
+        height: 50vh;
+        width: 50%;
+        
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        justify-content: space-evenly;
+        
+    }
+    label{
+        color: goldenrod;
+        font-size: 4vw;
+        text-shadow: 5px 2px gray;
+    }
+    input{
+        width: 50%;
+        height: 2vw;
+    }
+    .btn{
+        background-color: blanchedalmond;
+        height: 2vw;
+        width: 12vw;
+        color: black;
+        font-weight: bold;
+    }
+    .btn:hover{
+        background-color: white;
+        border: 0;
+    }
+</style>
 <body>
-    <form action="/api" method="post">
-        <label for="name">Name:</label>
+    <form action="/api/create" method="post">
+        <label for="name">Name</label>
         <input type="text" name="name">
-        <button type="submit">Submit</button>
+
+        <button type="submit" class="btn">Submit</button>
     </form>
     
 </body>

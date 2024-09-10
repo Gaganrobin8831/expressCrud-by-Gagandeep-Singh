@@ -1,13 +1,13 @@
-// index.router.js
 const express = require('express');
 const router = express.Router();
-const { HandleGet ,HandlePost } = require('../controllers/function.controller'); 
+const { HandleGet, HandlePost } = require('../controllers/function.controller');
 
-router.route('/')
-    .get(HandleGet)
-    
-    router.route('/create').post(HandlePost)
-   
+// Handle GET request
+router.route('/get').get(HandleGet);
 
-    
+// Handle POST request for creating new data
+router.route('/create').post(HandlePost);
+
+
+
 module.exports = router;

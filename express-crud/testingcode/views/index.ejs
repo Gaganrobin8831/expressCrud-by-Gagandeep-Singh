@@ -1,58 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Data</title>
+    <title>Data</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .quiz-section {
-            margin-bottom: 20px;
-        }
-        .question {
-            font-weight: bold;
-        }
-        .options {
-            list-style-type: none;
+        * {
+            margin: 0;
             padding: 0;
         }
-        .options li {
-            margin-bottom: 5px;
+
+        .container {
+            width: 100%;
+            background-color: gray;
+            min-height: 100vh;
+            overflow-y: auto;
+            
+        }
+
+        h1 {
+            text-align: center;
+            color: goldenrod;
+            text-shadow: 2px 2px;
+            font-size: 3vw;
+            margin-bottom: 2vw;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+           
+        }
+
+        th,
+        td {
+            border: 2px solid black;
+            padding: 10px;
+           
+            text-align: center;
+           
+        }
+
+        th {
+            background-color: #f2f2f2;
+        
+        }
+
+       
+        .btn {
+            background-color: blanchedalmond;
+            height: 40px;
+           
+            width: 100px;
+           
+            color: black;
+            font-weight: bold;
+            border: none;
+           
+            border-radius: 4px;
+           
+            cursor: pointer;
+          
+            margin: 0 5px;
+            
+        }
+
+        .btn:hover {
+            background-color: white;
+        }
+
+        button:focus {
+            outline: none;
+           
         }
     </style>
 </head>
+
 <body>
-    <h1>Quiz Data</h1>
+    <div class="container">
+        <h1>My Data</h1>
+        <hr>
+        <button class="btn" style="margin:2vw 2vw 2vw 2vw"><a href="/add/form">Add+</a></button>
 
-    <div id="quiz-container">
-        <% for (const [subject, quizzes] of Object.entries(quizData.quiz)) { %>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
 
-            <div class="quiz-section">
+                </tr>
+            </thead>
+            <tbody>
+                <% Data.forEach(function(myData) { %>
+                    <tr>
+                        <th scope="row">
+                            <%= myData.id %>
+                        </th>
+                        <td class="name">
+                            <%= myData.name %>
+                        </td>
+                        <td>
+                            <span>
 
-                <h2><%= subject.charAt(0).toUpperCase() + subject.slice(1) %></h2>
+                                   
+                                    <button type="submit" class="btn"><a href="/add/edit/<%= myData.id %>">Edit</a></button>
+                              
+                                   
+                                    <button type="submit" class="btn"><a href="/api/del/<%= myData.id %>">Delete</a></button>
+                               
+                                
+                            </span>
+                        </td>
 
-                <% for (const [key, quiz] of Object.entries(quizzes)) { %>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
 
-                    <div class="question"><%= quiz.question %></div>
 
-                    <ul class="options">
-                        
-                        <% quiz.options.forEach(option => { %>
-
-                            <li><%= option %></li>
-
-                        <% }); %>
-
-                    </ul>
-
-                <% } %>
-
-            </div>
-
-        <% } %>
     </div>
 </body>
+
 </html>
