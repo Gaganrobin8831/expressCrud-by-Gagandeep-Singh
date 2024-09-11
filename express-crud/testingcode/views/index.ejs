@@ -16,7 +16,6 @@
             background-color: gray;
             min-height: 100vh;
             overflow-y: auto;
-            
         }
 
         h1 {
@@ -30,40 +29,29 @@
         table {
             width: 100%;
             border-collapse: collapse;
-           
         }
 
         th,
         td {
             border: 2px solid black;
             padding: 10px;
-           
             text-align: center;
-           
         }
 
         th {
             background-color: #f2f2f2;
-        
         }
 
-       
         .btn {
             background-color: blanchedalmond;
             height: 40px;
-           
             width: 100px;
-           
             color: black;
             font-weight: bold;
             border: none;
-           
             border-radius: 4px;
-           
             cursor: pointer;
-          
             margin: 0 5px;
-            
         }
 
         .btn:hover {
@@ -72,54 +60,51 @@
 
         button:focus {
             outline: none;
-           
+        }
+
+        .message {
+            text-align: center;
+            font-size: 5vw;
+            color: goldenrod;
+            margin-top: 2vw;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>My Data</h1>
-        <hr>
-        <button class="btn" style="margin:2vw 2vw 2vw 2vw"><a href="/add/form">Add+</a></button>
+        <% if (message) { %>
+            <h1 class="message"><%= message %></h1>
+            <button class="btn" style="margin:2vw 2vw 2vw 2vw"><a href="/add/form">Add+</a></button>
+        <% } else { %>
+            <h1>My Data</h1>
+            <hr>
+            <button class="btn" style="margin:2vw 2vw 2vw 2vw"><a href="/add/form">Add+</a></button>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Action</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <% Data.forEach(function(myData) { %>
+            <table class="table">
+                <thead>
                     <tr>
-                        <th scope="row">
-                            <%= myData.id %>
-                        </th>
-                        <td class="name">
-                            <%= myData.name %>
-                        </td>
-                        <td>
-                            <span>
-
-                                   
-                                    <button type="submit" class="btn"><a href="/add/edit/<%= myData.id %>">Edit</a></button>
-                              
-                                   
-                                    <button type="submit" class="btn"><a href="/api/del/<%= myData.id %>">Delete</a></button>
-                               
-                                
-                            </span>
-                        </td>
-
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Action</th>
                     </tr>
+                </thead>
+                <tbody>
+                    <% Data.forEach(function(myData) { %>
+                        <tr>
+                            <th scope="row"><%= myData.id %></th>
+                            <td class="name"><%= myData.name %></td>
+                            <td>
+                                <span>
+                                    <button type="submit" class="btn"><a href="/add/edit/<%= myData.id %>">Edit</a></button>
+                                    <button type="submit" class="btn"><a href="/add/del/<%= myData.id %>">Delete</a></button>
+                                </span>
+                            </td>
+                        </tr>
                     <% }); %>
-            </tbody>
-        </table>
-
-
+                </tbody>
+            </table>
+        <% } %>
     </div>
 </body>
 

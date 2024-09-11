@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Edit Item</h1>
-    <form action="/api/update?_method=PUT" method="POST">
+    <form action="/add/update/" method="POST">
         <% item.forEach(element => { %>
             <input type="hidden" name="id" value="<%= element.id %>">
             <input type="text" name="name" value="<%= element.name %>">
