@@ -15,7 +15,7 @@ const app = express();
 // GraphQL schema
 const typeDefs = gql`
   type User {
-    id: ID!
+    id: ID
     name: String!
     email: String!
   }
