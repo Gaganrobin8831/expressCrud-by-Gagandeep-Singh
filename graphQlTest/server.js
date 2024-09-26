@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { ApolloServer, gql } = require('apollo-server-express');
 const userService = require('./services/user.services');
+const compression = require('compression')
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/graphql-demo')
@@ -43,6 +44,7 @@ const resolvers = {
 // Create an Apollo Server instance
 const server = new ApolloServer({ typeDefs, resolvers });
 
+app.use(compression())
 // Start the server asynchronously
 const startServer = async () => {
   await server.start();
